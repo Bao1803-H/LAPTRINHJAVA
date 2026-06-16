@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Journal Tracker
 
 Spring Boot + Spring Data JPA project for the scientific journal publication tracking system.
@@ -41,3 +42,4 @@ http://localhost:8080/api/ping
 - JPA entities are mapped from the project schema
 - A simple `/api/ping` endpoint is available for a quick smoke test
 - Docker compose is ready for local dev and demo runs
+=======
