@@ -1,40 +1,54 @@
 services:
-  mysql:
-    image: mysql:8.4
-    container_name: journal-tracker-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_NAME:-su26swp06}
-      MYSQL_USER: ${DB_USERNAME:-journal_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-journal_pass}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-    ports:
-      - "${MYSQL_PORT:-3306}:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: journal-tracker-app
-    restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
-    environment:
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_NAME: ${DB_NAME:-su26swp06}
-      DB_USERNAME: ${DB_USERNAME:-journal_user}
-      DB_PASSWORD: ${DB_PASSWORD:-journal_pass}
     ports:
-      - "8080:8080"
+      - "8081:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: su26swp06
+      DB_USERNAME: journal_user
+      DB_PASSWORD: journal_pass
+      JWT_SECRET: ${JWT_SECRET:-dGVzdC1zZWNyZXQta2V5LWZvci1qd3QtdG9rZW4tZ2VuZXJhdGlvbi1tdXN0LWJlLTI1Ni1iaXRz}
+      JWT_EXPIRATION_MS: 3600000
+      JWT_ISSUER: journal-tracker
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - journal-tracker-net
+
+  db:
+    image: mysql:8.0
+    container_name: journal-tracker-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: su26swp06
+      MYSQL_USER: journal_user
+      MYSQL_PASSWORD: journal_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    networks:
+      - journal-tracker-net
 
 volumes:
-  mysql_data:
+  db_data:
+
+networks:
+  journal-tracker-net:
+    driver: bridge

@@ -1,6 +1,3 @@
-target
-.git
-.idea
-*.iml
+.dockerignore
+.env
 *.log
-*.tmp
