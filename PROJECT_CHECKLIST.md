@@ -8,18 +8,18 @@
 
 ## Phase 1: Core Authentication (Priority: CRITICAL)
 
-### 1.1 Backend Auth - FIX HTTP 500
-- [ ] Fix `/api/auth/register` returning HTTP 500
-- [ ] Fix `/api/auth/login` - test and verify
-- [ ] Fix `/api/auth/logout` - test and verify
-- [ ] Fix `/api/auth/me` - test and verify
-- [ ] Test full auth flow (register → login → use token)
+### 1.1 Backend Auth
+- [x] Fix `/api/auth/register` - Hoạt động ✅
+- [x] Fix `/api/auth/login` - Hoạt động ✅
+- [x] Fix `/api/auth/logout` - Hoạt động ✅
+- [x] Fix `/api/auth/me` - Hoạt động ✅
+- [x] Test full auth flow (register → login → use token) ✅
 
 ### 1.2 Security Configuration
-- [ ] Verify JWT token generation works
-- [ ] Verify JWT authentication filter works
-- [ ] Verify role-based access control
-- [ ] Test protected endpoints with valid/invalid tokens
+- [x] Verify JWT token generation works ✅
+- [x] Verify JWT authentication filter works ✅ (invalid token → 403 Forbidden)
+- [x] Verify role-based access control ✅ (protected endpoints require auth)
+- [x] Test protected endpoints with valid/invalid tokens ✅
 
 ---
 
